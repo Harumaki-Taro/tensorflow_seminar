@@ -1,5 +1,5 @@
-### mnist_3.py
-### 目的: 最低限の研究用プログラムを書けるようになる。
+### mnist_4.py
+### 目的: もっとtensorflowの機能(モデルの保存)を使えるようになる。
 ### 動作確認: tensorflow1.7.0, miniconda3-4.3.11, Python3.6.5, OSX10.13.4
 ### 参考文献: 新村拓哉, TensorFlowではじめるDeepLearning実装入門, 株式会社インプレス, 2018
 
@@ -22,7 +22,7 @@ tf.app.flags.DEFINE_integer('max_steps', 5000,
 tf.app.flags.DEFINE_integer('batch_size', 128,
                             """バッチサイズ""")
 tf.app.flags.DEFINE_integer('log_interval', 50,
-                            """ログを出力するインターバル""")
+                            """ログを出力する間隔""")
 tf.app.flags.DEFINE_float('learning_rate', 0.01,
                           """学習率""")
 tf.app.flags.DEFINE_float('momentum', 0.9,
@@ -31,6 +31,10 @@ tf.app.flags.DEFINE_boolean('use_nesterov', True,
                             """Nesterovの加速勾配降下法""")
 tf.app.flags.DEFINE_integer('seed', 1234,
                             """random seed""")
+tf.app.flags.DEFINE_integer('max_to_keep', 10,
+                            """モデル保存数の上限""")
+tf.app.flags.DEFINE_integer('save_interval', 500,
+                            """モデルの保存の間隔""")
 
 ###
 ### mnistデータセットの準備（tensorflow的に本来はここも計算グラフに入るはず）
@@ -113,6 +117,8 @@ train_op = optimizer.minimize(loss)
 # 初期化オペレーションの用意
 init = tf.global_variables_initializer()
 
+# モデルを保存するオペレーションを用意
+saver = tf.train.Saver(max_to_keep=FLAGS.max_to_keep)
 
 ###
 ### 構築した計算グラフを用いて計算する
@@ -142,3 +148,8 @@ with tf.Session() as sess:
             loss_val, acc_val = sess.run([loss, accuracy],
                                          feed_dict={x_0:test_images, t:test_labels})
             print('%d\t%.4f\t%.3f\t%.1f' % (step, loss_val, acc_val, duration*1000))
+
+        if step % FLAGS.save_interval == 0:
+            saver.save(sess, 'ckpt/model', global_step=step)
+
+    saver.save(sess, 'ckpt/model', global_step=step)

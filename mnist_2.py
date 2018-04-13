@@ -2,6 +2,7 @@
 ### 目的: tensorflowの機能(TensorBoard)を使えるようになる。
 ### 動作確認: tensorflow1.7.0, miniconda3-4.3.11, Python3.6.5, OSX10.13.4
 ### 参考文献: 新村拓哉, TensorFlowではじめるDeepLearning実装入門, 株式会社インプレス, 2018
+# NOTE:name_scopeとvariable_scopeについてとreluのbiasについて補足
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
