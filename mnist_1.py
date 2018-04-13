@@ -1,5 +1,5 @@
 ### mnist_1.py
-### 内容: mnistを学習する最低限のニューラルネットワークを作る。
+### 目的: mnistを学習する最低限のニューラルネットワークを作れるようになる。
 ### 動作確認: tensorflow1.7.0, miniconda3-4.3.11, Python3.6.5, OSX10.13.4
 ### 参考文献: 新村拓哉, TensorFlowではじめるDeepLearning実装入門, 株式会社インプレス, 2018
 
@@ -18,16 +18,16 @@ mnist = input_data.read_data_sets('data/', one_hot=True)
 ### 計算グラフ(ニューラルネット)を構築する
 ###
 
-# 入力層の用意
-x_0 = tf.placeholder(tf.float32, [None, 28*28])       # mnist画像のサイズが28*28=784次元のベクトル
+# 入力層の用意(mnist画像のサイズが28*28=784次元のベクトル)
+x_0 = tf.placeholder(tf.float32, [None, 28*28])
 
 # 隠れ層の用意
-w_1 = tf.Variable(tf.random_normal([28*28, 64], mean=0.0, stddev=0.1, seed=None), name='w_1')
+w_1 = tf.Variable(tf.random_normal([28*28, 64], mean=0.0, stddev=0.1), name='w_1')
 b_1 = tf.Variable(tf.zeros([64]), name='b_1')
 x_1 = tf.nn.relu(tf.matmul(x_0, w_1) + b_1)
 
 # 出力層の用意
-w_2 = tf.Variable(tf.truncated_normal([64, 10], mean=0.0, stddev=0.1, seed=None), name='w_2')
+w_2 = tf.Variable(tf.random_normal([64, 10], mean=0.0, stddev=0.1), name='w_2')
 b_2 = tf.Variable(tf.zeros([10]), name='b_2')
 logit = tf.matmul(x_1, w_2) + b_2
 y = tf.nn.softmax(logit)
@@ -36,8 +36,9 @@ y = tf.nn.softmax(logit)
 t = tf.placeholder(tf.float32, [None, 10])
 loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=logit), name='loss')
 
-# トレーニングオペレーションの用意
-train_op = tf.train.GradientDescentOptimizer(0.5).minimize(loss)
+# トレーニングオペレーションの用意(確率的勾配降下法(SGD))
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)
+train_op = optimizer.minimize(loss)
 
 # 評価値の用意
 correct = tf.equal(tf.argmax(y, 1), tf.argmax(t, 1))        # 正答したかどうかのboolの配列
@@ -75,4 +76,4 @@ with tf.Session() as sess:
         if step % 10 == 0:
             # accuracyを計算
             correct_val, acc_val = sess.run([correct_num, accuracy], feed_dict={x_0:test_images, t:test_labels})
-            print('step %d: correct_num = %d  acc = %.2f' % (step, correct_val, acc_val))
+            print('step %d: correct_num = %d/10000  acc = %.2f' % (step, correct_val, acc_val))
