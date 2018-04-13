@@ -59,7 +59,7 @@ with tf.Session() as sess:
     # 初期化の実行
     sess.run(init)
 
-    # テストデータをロード
+    # あらかじめテストデータをロード
     # テスト用の全ての画像データを取得
     test_images = mnist.test.images
     #テスト用の全ての教師データを取得

@@ -5,6 +5,7 @@
 
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
+import datetime
 import time
 
 
@@ -29,6 +30,16 @@ tf.app.flags.DEFINE_integer('seed', 1234,
 ### mnistデータセットの準備（tensorflow的に本来はここも計算グラフに入るはず）
 ###
 
+print('###')
+print('###mnist_3')
+print('###')
+print('# date        : ' + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+print('# h1_unit_num : %d' % FLAGS.h1_unit_num)
+print('# h2_unit_num : %d' % FLAGS.h2_unit_num)
+print('# max_steps   : %d' % FLAGS.max_steps)
+print('# batch_size  : %d' % FLAGS.batch_size)
+print('# log_interval: %d' % FLAGS.log_interval)
+print('# random seed : %d' % FLAGS.seed)
 # mnistデータセットを格納したオブジェクトを呼び出す
 mnist = input_data.read_data_sets('data/', one_hot=True)
 
@@ -101,18 +112,16 @@ init = tf.global_variables_initializer()
 
 # 構築した計算グラフの実行
 with tf.Session() as sess:
+    print('# step\tloss\tacc\tmsec/step')
     # 初期化の実行
     sess.run(init)
 
     # テストデータをロード
-    # テスト用の全ての画像データを取得
     test_images = mnist.test.images
-    #テスト用の全ての教師データを取得
     test_labels = mnist.test.labels
 
     for step in range(FLAGS.max_steps):
         # 訓練用の入力データ、教師データを取得
-        #（ミニバッチ数を設定することでsessionの中で使うと新しいデータを50個ずつランダムにポップしてくれる）
         train_images, train_labels = mnist.train.next_batch(FLAGS.batch_size)
 
         # train_opを実行
@@ -124,4 +133,4 @@ with tf.Session() as sess:
             # accuracyを計算
             loss_val, acc_val = sess.run([loss, accuracy],
                                          feed_dict={x_0:test_images, t:test_labels})
-            print('step %d: loss = %.4f acc = %.3f  %.1f[msec/step]' % (step, loss_val, acc_val, duration*1000))
+            print('%d\t%.4f\t%.3f\t%.1f' % (step, loss_val, acc_val, duration*1000))

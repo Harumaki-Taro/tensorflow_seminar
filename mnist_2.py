@@ -94,7 +94,7 @@ with tf.Session() as sess:
     # 初期化の実行
     sess.run(init)
 
-    # テストデータをロード
+    # あらかじめテストデータをロード
     # テスト用の全ての画像データを取得
     test_images = mnist.test.images
     #テスト用の全ての教師データを取得
@@ -102,7 +102,7 @@ with tf.Session() as sess:
 
     for step in range(max_steps):
         # 訓練用の入力データ、教師データを取得
-        #（ミニバッチ数を設定することでsessionの中で使うと新しいデータを50個ずつランダムにポップしてくれる）
+        #（ミニバッチ数を設定することでsessionの中で使うと新しいデータをランダムにポップしてくれる）
         train_images, train_labels = mnist.train.next_batch(batch_size)
 
         # train_opを実行
