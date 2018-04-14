@@ -1,2 +1,4 @@
 *.pptx
-/ckpt/
+*/ckpt/
+*/__pycache__/
+*.log

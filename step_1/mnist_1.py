@@ -34,7 +34,8 @@ y = tf.nn.softmax(logit)
 
 # 損失関数の用意
 t = tf.placeholder(tf.float32, [None, 10])
-loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=logit), name='loss')
+cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=logit)
+loss = tf.reduce_mean(cross_entropy, name='loss')
 
 # トレーニングオペレーションの用意(確率的勾配降下法(SGD))
 optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.5)

@@ -65,7 +65,8 @@ with tf.name_scope('output_layer') as scope:
 with tf.name_scope('evaluation') as scope:
     # 損失関数の用意
     t = tf.placeholder(tf.float32, [None, LABEL_SIZE])
-    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=logit), name='loss')
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=t, logits=logit)
+    loss = tf.reduce_mean(cross_entropy, name='loss')
     tf.summary.scalar('loss', loss)                             # lossのログを取得するように設定
     # 評価値の用意
     correct = tf.equal(tf.argmax(y, 1), tf.argmax(t, 1))        # 正答したかどうかのboolの配列
