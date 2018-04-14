@@ -16,9 +16,6 @@ import mnist
 import mnist_full_connect_4
 
 
-EXAMPLE_SIZE = 28*28    # 画像のサイズ
-LABEL_SIZE = 10         # ラベルの数
-
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_integer('max_steps', 5000,
                             """学習回数""")
@@ -36,8 +33,8 @@ def train():
     # mnistデータセットを格納したオブジェクトを呼び出す
     mnist_data = mnist.read_data_sets()
 
-    images = tf.placeholder(tf.float32, [None, EXAMPLE_SIZE], name='input_layer')
-    labels = tf.placeholder(tf.float32, [None, LABEL_SIZE])
+    images = tf.placeholder(tf.float32, [None, mnist.EXAMPLE_SIZE], name='input_layer')
+    labels = tf.placeholder(tf.float32, [None, mnist.LABEL_SIZE])
 
     # Neural network
     with tf.name_scope('neural_network'):
@@ -49,7 +46,7 @@ def train():
     train_op = mnist.train(losses)          # トレーニングオペレーション
 
     # モデルの保存オペレーション
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(max_to_keep=FLAGS.max_to_keep)
 
     # 初期化オペレーションの用意
     init = tf.global_variables_initializer()

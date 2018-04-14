@@ -17,6 +17,9 @@ tf.app.flags.DEFINE_boolean('use_nesterov', True,
 tf.app.flags.DEFINE_string('mnist_path', '../data/',
                            """mnistデータセットが格納されているパス""")
 
+EXAMPLE_SIZE = 28*28    # 画像のサイズ
+LABEL_SIZE = 10         # ラベルの数
+
 
 def read_data_sets(one_hot=True):
     print('mnist path   : %s' % os.path.abspath(FLAGS.mnist_path))
